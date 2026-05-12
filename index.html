@@ -84,19 +84,17 @@
       </div>
       <p class="small">Controls: <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd>. Avoid cones. Stars = bonus.</p>
 
-      <details>
-        <summary>Peer-to-peer play</summary>
-        <p class="small">Easy room mode: one person hosts and shares the room code. Everyone else pastes that code and clicks Join Room. Supports up to 10 players total.</p>
+      <details open>
+        <summary>Multiplayer room</summary>
+        <p class="small">Joining is the main action: paste the host's room code, enter your name, then click Join Room. One host can start the race when everyone is ready.</p>
+        <button class="primary" id="joinBtn" style="width:100%;font-size:17px;margin:8px 0 10px;">Join Room</button>
         <div class="grid2">
           <button class="secondary" id="hostBtn">Host Room</button>
-          <button class="secondary" id="joinBtn">Join Room</button>
-        </div>
-        <p class="small">Clipboard box:</p>
-        <textarea id="signalBox" placeholder="Host room code appears here. Joiners paste the host room code here."></textarea>
-        <div class="grid2">
           <button id="answerBtn">Copy Room Code</button>
-          <button id="acceptBtn">Leave Room</button>
         </div>
+        <p class="small"><b>Room code</b> — joiners paste it here; host shares it from here:</p>
+        <textarea id="signalBox" placeholder="Host room code appears here. Joiners paste the host room code here."></textarea>
+        <button class="danger" id="acceptBtn" style="width:100%;margin-top:10px;">Leave Room</button>
         <div class="status" id="netStatus">Network: not connected</div>
       </details>
     </section>
