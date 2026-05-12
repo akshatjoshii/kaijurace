@@ -437,7 +437,14 @@
   function loop() { update(); draw(); }
   requestAnimationFrame(loop);
 
-  document.addEventListener('keydown', e => { keys.add(e.key); if (['ArrowLeft','ArrowRight','a','d'].includes(e.key)) e.preventDefault(); });
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement?.tagName;
+    const typing = tag === 'INPUT' || tag === 'TEXTAREA';
+    if (typing) return;
+
+    keys.add(e.key);
+    if (['ArrowLeft','ArrowRight','a','d'].includes(e.key)) e.preventDefault();
+  });
   document.addEventListener('keyup', e => keys.delete(e.key));
   document.getElementById('startBtn').onclick = () => {
     if (!isHost && connections.size > 0) {
