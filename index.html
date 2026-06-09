@@ -195,7 +195,9 @@
 
   let app = null;
   let db = null;
-  const configReady = !firebaseConfig.apiKey.includes("AIzaSyBKs-vu6Y2c9ygvew8wVnDHHAhMIB6x6OY");
+  const configReady = !firebaseConfig.apiKey.includes("PASTE_");
+
+  console.log(configReady);
 
   if (configReady) {
     app = initializeApp(firebaseConfig);
