@@ -83,6 +83,22 @@
       box-shadow: 0 24px 70px rgba(31,41,55,.26);
       border: 1px solid rgba(255,255,255,.5); background: #0f172a;
     }
+    .gameShell.spectating canvas {
+      filter: grayscale(.72) brightness(.74);
+    }
+    .gameShell.spectating::after {
+      content: "Spectating";
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(17,24,39,.78);
+      color: white;
+      font-weight: 950;
+      font-size: 13px;
+      pointer-events: none;
+    }
     canvas { width: 100%; height: 100%; display:block; }
     .toast {
       position:absolute; top:16px; left:50%; transform: translateX(-50%);
@@ -141,13 +157,13 @@
           <button id="copyBtn">Copy Room Code</button>
         </div>
         <button class="danger" id="leaveBtn" style="width:100%;margin-top:10px;">Leave Room</button>
-        <div class="status" id="netStatus">Network: add config, then host or join.</div>
+        <div class="status" id="netStatus">Network: add Firebase config, then host or join.</div>
       </details>
     </section>
 
     <main class="gameShell">
       <canvas id="game"></canvas>
-      <div class="toast" id="toast">Host or join a room</div>
+      <div class="toast" id="toast">Host or join a Firebase room</div>
       <div class="mobile">
         <button id="leftBtn">⬅️</button>
         <button id="boostBtn">⭐</button>
@@ -172,6 +188,8 @@
   } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
 
   // 1) Paste your Firebase web config here.
+  // Firebase Console > Project settings > Your apps > Web app config.
+ // 1) Paste your Firebase web config here.
   // Firebase Console > Project settings > Your apps > Web app config.
   // const firebaseConfig = {
   //   apiKey: "PASTE_YOUR_API_KEY",
@@ -203,6 +221,7 @@
   }
 
   const canvas = document.getElementById('game');
+  const gameShell = document.querySelector('.gameShell');
   const ctx = canvas.getContext('2d');
   const scoreEl = document.getElementById('score');
   const livesEl = document.getElementById('lives');
@@ -297,6 +316,7 @@
   }
 
   function resetGame() {
+    gameShell.classList.remove('spectating');
     running = false;
     over = false;
     t = 0;
@@ -307,11 +327,12 @@
     Object.assign(state, { x: W/2, vx: 0, speed: 6.2, roadOffset: 0, obstacles: [], stars: [], confetti: [] });
     writeMe({ score, lives, x: state.x / W, running: false });
     updateHud();
-    toast.textContent = roomId ? 'Waiting for host to start' : 'Host or join a Firebase room';
+    toast.textContent = roomId ? 'Waiting for host to start' : 'Host or join a room';
     toast.style.display = 'block';
   }
 
   function startGame(localOnly = false) {
+    gameShell.classList.remove('spectating');
     running = true;
     over = false;
     score = 0;
@@ -600,10 +621,12 @@
   function endGame() {
     over = true;
     running = false;
+    gameShell.classList.add('spectating');
+    keys.clear();
     burst(state.x, H-105);
     best = Math.max(best, Math.floor(score));
     localStorage.setItem('kaijuSprintBestFirebase', best);
-    writeMe({ running: false, score, lives });
+    writeMe({ running: false, score, lives, eliminated: true });
     toast.textContent = 'Game over! Press Reset, then host can start again.';
     toast.style.display = 'block';
   }
@@ -752,7 +775,7 @@
 
   async function enterRoom(code, host = false) {
     if (!configReady) {
-      netStatus.textContent = 'Network: paste Firebase config in index.html first.';
+      netStatus.textContent = 'Network: paste config in index.html first.';
       return;
     }
 
@@ -866,7 +889,7 @@
     isHost = false;
     roomLocked = false;
     if (clearCode) signalBox.value = "";
-    netStatus.textContent = configReady ? 'Network: left room.' : 'Network: add Firebase config, then host or join.';
+    netStatus.textContent = configReady ? 'Network: left room.' : 'Network: add config, then host or join.';
     peerEl.textContent = 'Solo';
   }
 
@@ -936,15 +959,15 @@
   document.addEventListener('keydown', e => {
     const tag = document.activeElement?.tagName;
     const typing = tag === 'INPUT' || tag === 'TEXTAREA';
-    if (typing) return;
+    if (typing || over) return;
     keys.add(e.key);
     if (['ArrowLeft','ArrowRight','a','d'].includes(e.key)) e.preventDefault();
   });
   document.addEventListener('keyup', e => keys.delete(e.key));
 
   if (!configReady) {
-    toast.textContent = 'Paste Firebase config into index.html first';
-    netStatus.textContent = 'Network: waiting for Firebase config.';
+    toast.textContent = 'Paste config into index.html first';
+    netStatus.textContent = 'Network: waiting for config.';
   }
 </script>
 </body>
