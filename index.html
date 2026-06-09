@@ -3,60 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kaiju Sprint</title>
+  <title>Kaiju Sprint - Multiplayer</title>
   <style>
     :root {
       --bg1: #7dd3fc;
       --bg2: #c084fc;
-      --road: #2f3542;
-      --lane: rgba(255,255,255,.45);
-      --panel: rgba(255,255,255,.82);
+      --panel: rgba(255,255,255,.84);
       --ink: #172033;
-      --pink: #fb7185;
-      --green: #34d399;
-      --yellow: #fde047;
-      --blue: #60a5fa;
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; height: 100%; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); }
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+    }
     body { background: linear-gradient(135deg, var(--bg1), var(--bg2)); }
-    .wrap { height: 100%; display: grid; grid-template-columns: minmax(300px, 430px) 1fr; gap: 18px; padding: 18px; }
-    .panel { background: var(--panel); border: 1px solid rgba(255,255,255,.6); border-radius: 28px; box-shadow: 0 24px 70px rgba(31,41,55,.22); backdrop-filter: blur(16px); padding: 22px; overflow: auto; }
+    .wrap {
+      height: 100%;
+      display: grid;
+      grid-template-columns: minmax(320px, 440px) 1fr;
+      gap: 18px;
+      padding: 18px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.6);
+      border-radius: 28px;
+      box-shadow: 0 24px 70px rgba(31,41,55,.22);
+      backdrop-filter: blur(16px);
+      padding: 22px;
+      overflow: auto;
+    }
     h1 { margin: 0 0 8px; font-size: 34px; line-height: 1; letter-spacing: -1.2px; }
-    .tag { font-weight: 800; color: #7c3aed; }
+    .tag { font-weight: 900; color: #7c3aed; }
     p { margin: 8px 0; line-height: 1.45; }
     .hero { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    .car-badge { width: 76px; height: 76px; display:grid; place-items:center; border-radius: 24px; background: linear-gradient(160deg, #fff, #e0f2fe); font-size: 42px; box-shadow: inset 0 -6px 0 rgba(0,0,0,.04); }
+    .car-badge {
+      width: 76px; height: 76px; display:grid; place-items:center; border-radius: 24px;
+      background: linear-gradient(160deg, #fff, #e0f2fe); font-size: 42px;
+      box-shadow: inset 0 -6px 0 rgba(0,0,0,.04);
+    }
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
-    .stat { background: rgba(255,255,255,.6); border-radius: 18px; padding: 12px; }
+    .stat { background: rgba(255,255,255,.62); border-radius: 18px; padding: 12px; }
     .stat b { display:block; font-size: 22px; }
     button, textarea, input { font: inherit; }
-    button { border:0; cursor:pointer; border-radius: 16px; padding: 12px 14px; font-weight: 900; color: #111827; background: white; box-shadow: 0 8px 0 rgba(0,0,0,.08); transition: transform .08s ease, box-shadow .08s ease; }
+    input, textarea {
+      width:100%;
+      border:0;
+      outline:0;
+      border-radius:16px;
+      padding:12px;
+      background: rgba(255,255,255,.78);
+      color:#1f2937;
+      font-weight: 750;
+    }
+    textarea { min-height:72px; resize:vertical; }
+    button {
+      border:0; cursor:pointer; border-radius: 16px; padding: 12px 14px; font-weight: 950;
+      color: #111827; background: white; box-shadow: 0 8px 0 rgba(0,0,0,.08);
+      transition: transform .08s ease, box-shadow .08s ease;
+    }
     button:hover { transform: translateY(-1px); }
     button:active { transform: translateY(5px); box-shadow: 0 3px 0 rgba(0,0,0,.08); }
-    .primary { background: linear-gradient(135deg, #fde047, #fb7185); color: white; text-shadow: 0 1px 0 rgba(0,0,0,.16); }
+    button:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+    .primary {
+      background: linear-gradient(135deg, #fde047, #fb7185);
+      color: white;
+      text-shadow: 0 1px 0 rgba(0,0,0,.16);
+    }
     .secondary { background: #dbeafe; }
     .danger { background: #ffe4e6; }
     .grid2 { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    textarea { width:100%; min-height:92px; border:0; outline:0; resize:vertical; border-radius:16px; padding:12px; background: rgba(255,255,255,.75); color:#1f2937; }
     .small { font-size: 13px; color:#475569; }
-    .status { padding: 10px 12px; border-radius: 16px; background: rgba(255,255,255,.62); margin-top: 10px; font-weight: 700; }
-    .gameShell { position:relative; min-height: 0; border-radius: 34px; overflow: hidden; box-shadow: 0 24px 70px rgba(31,41,55,.26); border: 1px solid rgba(255,255,255,.5); background: #0f172a; }
+    .status { padding: 10px 12px; border-radius: 16px; background: rgba(255,255,255,.62); margin-top: 10px; font-weight: 800; }
+    .gameShell {
+      position:relative; min-height: 0; border-radius: 34px; overflow: hidden;
+      box-shadow: 0 24px 70px rgba(31,41,55,.26);
+      border: 1px solid rgba(255,255,255,.5); background: #0f172a;
+    }
     canvas { width: 100%; height: 100%; display:block; }
-    .toast { position:absolute; top:16px; left:50%; transform: translateX(-50%); background: rgba(255,255,255,.9); border-radius: 999px; padding: 10px 18px; font-weight: 900; box-shadow: 0 10px 30px rgba(0,0,0,.18); pointer-events:none; }
+    .toast {
+      position:absolute; top:16px; left:50%; transform: translateX(-50%);
+      background: rgba(255,255,255,.92); border-radius: 999px; padding: 10px 18px;
+      font-weight: 950; box-shadow: 0 10px 30px rgba(0,0,0,.18); pointer-events:none;
+      text-align:center;
+    }
     .mobile { position:absolute; inset:auto 14px 14px 14px; display:none; grid-template-columns: 1fr 1fr 1fr; gap:10px; }
     .mobile button { opacity:.88; padding:16px 8px; }
     kbd { background: #111827; color:white; padding: 2px 7px; border-radius: 7px; font-size: 12px; }
     details { margin-top: 14px; }
-    summary { font-weight: 900; cursor:pointer; }
+    summary { font-weight: 950; cursor:pointer; font-size: 18px; }
+    .hostOnly { opacity:.9; }
     @media (max-width: 850px) {
       .wrap { grid-template-columns: 1fr; grid-template-rows: auto 1fr; padding: 10px; gap: 10px; }
-      .panel { max-height: 44vh; border-radius: 22px; }
+      .panel { max-height: 48vh; border-radius: 22px; }
       h1 { font-size: 28px; }
       .mobile { display:grid; }
     }
   </style>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -64,44 +110,44 @@
       <div class="hero">
         <div>
           <h1>Kaiju Sprint</h1>
-          <p class="tag">A cheerful web racing game with cars and tiny kaiju copilots.</p>
+          <p class="tag">Remote multiplayer, GitHub Pages + Firebase.</p>
         </div>
         <div class="car-badge">🏎️</div>
       </div>
-      <p>Race cheerful cars with tiny kaiju copilots, collect stars, dodge cones, and bump friends through peer-to-peer WebRTC.</p>
+      <p>Race cheerful cars with tiny kaiju copilots, collect stars, dodge cones, and bump friends.</p>
+
+      <input id="playerName" placeholder="Your racer name" maxlength="18" style="margin:10px 0;" />
 
       <div class="stats">
         <div class="stat">Score <b id="score">0</b></div>
         <div class="stat">Lives <b id="lives">3</b></div>
         <div class="stat">Best <b id="best">0</b></div>
-        <div class="stat">Peer <b id="peer">Solo</b></div>
+        <div class="stat">Players <b id="peer">Solo</b></div>
       </div>
 
-      <input id="playerName" placeholder="Enter your racer name" style="width:100%;margin-bottom:10px;padding:12px;border-radius:14px;border:0;background:rgba(255,255,255,.75);font-weight:700;" />
       <div class="grid2">
         <button class="primary" id="startBtn">Host Start Race</button>
         <button class="danger" id="resetBtn">Reset</button>
       </div>
-      <p class="small">Controls: <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd>. Avoid cones. Stars = bonus.</p>
+      <p class="small">Controls: <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd>. 3 lives. Bumps cost lives.</p>
 
       <details open>
         <summary>Multiplayer room</summary>
         <p class="small">Joining is the main action: paste the host's room code, enter your name, then click Join Room. One host can start the race when everyone is ready.</p>
+        <textarea id="signalBox" placeholder="Room code, e.g. KAIJU-12345"></textarea>
         <button class="primary" id="joinBtn" style="width:100%;font-size:17px;margin:8px 0 10px;">Join Room</button>
         <div class="grid2">
           <button class="secondary" id="hostBtn">Host Room</button>
-          <button id="answerBtn">Copy Room Code</button>
+          <button id="copyBtn">Copy Room Code</button>
         </div>
-        <p class="small"><b>Room code</b> — joiners paste it here; host shares it from here:</p>
-        <textarea id="signalBox" placeholder="Host room code appears here. Joiners paste the host room code here."></textarea>
-        <button class="danger" id="acceptBtn" style="width:100%;margin-top:10px;">Leave Room</button>
-        <div class="status" id="netStatus">Network: not connected</div>
+        <button class="danger" id="leaveBtn" style="width:100%;margin-top:10px;">Leave Room</button>
+        <div class="status" id="netStatus">Network: add Firebase config, then host or join.</div>
       </details>
     </section>
 
     <main class="gameShell">
       <canvas id="game"></canvas>
-      <div class="toast" id="toast">Press Start Race</div>
+      <div class="toast" id="toast">Host or join a Firebase room</div>
       <div class="mobile">
         <button id="leftBtn">⬅️</button>
         <button id="boostBtn">⭐</button>
@@ -110,12 +156,55 @@
     </main>
   </div>
 
-<script>
-(() => {
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import {
+    getDatabase,
+    ref,
+    set,
+    update,
+    onValue,
+    onDisconnect,
+    remove,
+    get,
+    child,
+    runTransaction
+  } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+  // 1) Paste your Firebase web config here.
+  // Firebase Console > Project settings > Your apps > Web app config.
+  // const firebaseConfig = {
+  //   apiKey: "PASTE_YOUR_API_KEY",
+  //   authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  //   databaseURL: "https://funrace-b27b6-default-rtdb.firebaseio.com/",
+  //   projectId: "PASTE_YOUR_PROJECT",
+  //   storageBucket: "PASTE_YOUR_PROJECT.firebasestorage.app",
+  //   messagingSenderId: "PASTE_SENDER_ID",
+  //   appId: "PASTE_APP_ID"
+  // };
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBKs-vu6Y2c9ygvew8wVnDHHAhMIB6x6OY",
+    authDomain: "funrace-b27b6.firebaseapp.com",
+    databaseURL: "https://funrace-b27b6-default-rtdb.firebaseio.com",
+    projectId: "funrace-b27b6",
+    storageBucket: "funrace-b27b6.firebasestorage.app",
+    messagingSenderId: "806432056368",
+    appId: "1:806432056368:web:b1e95ffa564cf7a797f9f5"
+  }
+
+  let app = null;
+  let db = null;
+  const configReady = !firebaseConfig.apiKey.includes("AIzaSyBKs-vu6Y2c9ygvew8wVnDHHAhMIB6x6OY");
+
+  if (configReady) {
+    app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+  }
+
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
   const scoreEl = document.getElementById('score');
-  const speedEl = document.getElementById('speed');
   const livesEl = document.getElementById('lives');
   const bestEl = document.getElementById('best');
   const peerEl = document.getElementById('peer');
@@ -127,38 +216,40 @@
   let W = 900, H = 700, dpr = 1;
   let running = false;
   let roomLocked = false;
+  let isHost = false;
   let over = false;
   let t = 0;
   let score = 0;
   let lives = 3;
   let invincibleUntil = 0;
-  let lastPeerHitAt = 0;
   let shake = 0;
-  let best = Number(localStorage.getItem('standupSprintBest') || 0);
+  let lastWriteAt = 0;
+  let lastPeerHitAt = 0;
+  let best = Number(localStorage.getItem('kaijuSprintBestFirebase') || 0);
   bestEl.textContent = best;
+
+  const myId = localStorage.getItem('kaijuSprintPlayerId') || Math.random().toString(36).slice(2, 9);
+  localStorage.setItem('kaijuSprintPlayerId', myId);
+
+  const carColors = ['#14b8a6','#8b5cf6','#fde047','#fb7185','#60a5fa','#f97316','#f472b6','#22d3ee','#a3e635','#e5e7eb'];
+  const peers = new Map();
+  const keys = new Set();
+
+  let roomId = "";
+  let roomRef = null;
+  let myPlayerRef = null;
+  let playersUnsub = null;
+  let roomUnsub = null;
 
   const state = {
     x: 0,
     vx: 0,
-    lane: 0,
     speed: 8,
     roadOffset: 0,
     obstacles: [],
     stars: [],
-    confetti: [],
-    crashed: false
+    confetti: []
   };
-
-  const keys = new Set();
-  let dataChannel = null;
-  let pc = null;
-  let peer = null;
-  let isHost = false;
-  const connections = new Map();
-  let myId = Math.random().toString(36).slice(2, 8);
-  const carColors = ['#14b8a6','#8b5cf6','#fde047','#fb7185','#60a5fa','#f97316','#f472b6','#22d3ee','#a3e635','#e5e7eb'];
-  const kaijuNames = ['YOU','ZILLA','RAWR','GIGI','TOAST','SPIKE','DINO','MEGA','NOMZ','CHOMPY'];
-  const peers = new Map();
 
   function resize() {
     const rect = canvas.parentElement.getBoundingClientRect();
@@ -173,30 +264,59 @@
   window.addEventListener('resize', resize);
   resize();
 
+  function roomCode() {
+    return 'KAIJU-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+  }
+
+  function playerName() {
+    return playerNameInput.value.trim() || ('Player ' + myId.toUpperCase());
+  }
+
   function roadBounds(y = H) {
     const roadW = Math.min(W * 0.72, 560) + Math.sin((y + t) * .004) * 26;
     return { left: W / 2 - roadW / 2, right: W / 2 + roadW / 2, width: roadW };
   }
 
   function resetGame() {
-    running = false; over = false; t = 0; score = 0; lives = 3; invincibleUntil = 0; lastPeerHitAt = 0; shake = 0;
+    running = false;
+    over = false;
+    t = 0;
+    score = 0;
+    lives = 3;
+    invincibleUntil = 0;
+    shake = 0;
     Object.assign(state, { x: W/2, vx: 0, speed: 8, roadOffset: 0, obstacles: [], stars: [], confetti: [] });
-    updateHud(); toast.textContent = 'Press Start Race'; toast.style.display = 'block';
+    writeMe({ score, lives, x: state.x / W, running: false });
+    updateHud();
+    toast.textContent = roomId ? 'Waiting for host to start' : 'Host or join a Firebase room';
+    toast.style.display = 'block';
   }
 
-  function startGame() {
-    running = true; over = false; score = 0; lives = 3; invincibleUntil = 0; lastPeerHitAt = 0; shake = 0; t = 0;
-    state.x = W / 2; state.vx = 0; state.speed = 8; state.obstacles = []; state.stars = []; state.confetti = [];
-    toast.textContent = 'Go go go!'; toast.style.display = 'block';
+  function startGame(localOnly = false) {
+    running = true;
+    over = false;
+    score = 0;
+    lives = 3;
+    invincibleUntil = 0;
+    shake = 0;
+    t = 0;
+    state.x = W / 2;
+    state.vx = 0;
+    state.speed = 8;
+    state.obstacles = [];
+    state.stars = [];
+    state.confetti = [];
+    writeMe({ score, lives, x: state.x / W, running: true });
+    toast.textContent = 'Race started!';
+    toast.style.display = 'block';
     setTimeout(() => { if (running) toast.style.display = 'none'; }, 900);
   }
 
   function updateHud() {
     scoreEl.textContent = Math.floor(score);
-    if (speedEl) speedEl.textContent = Math.floor(state.speed * 10);
-    if (livesEl) livesEl.textContent = lives;
+    livesEl.textContent = lives;
     bestEl.textContent = best;
-    peerEl.textContent = peers.size ? `${Math.min(10, peers.size + 1)} cars` : 'Solo';
+    peerEl.textContent = roomId ? String(Math.min(10, peers.size + 1)) : 'Solo';
   }
 
   function spawn() {
@@ -210,12 +330,21 @@
     }
   }
 
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
   function carPath(x, y, color, scale = 1, label = '') {
     ctx.save();
     ctx.translate(x, y);
     ctx.scale(scale, scale);
 
-    // player name
     if (label) {
       ctx.font = '800 11px system-ui';
       const w = ctx.measureText(label).width + 14;
@@ -229,35 +358,31 @@
       ctx.textAlign = 'start';
     }
 
-    // shadow
     ctx.fillStyle = 'rgba(0,0,0,.22)';
     ctx.beginPath();
     ctx.ellipse(0, 36, 36, 11, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // car body
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.roundRect(-28, -38, 56, 78, 18);
     ctx.fill();
 
-    // hood stripe
     ctx.fillStyle = 'rgba(255,255,255,.22)';
     ctx.beginPath();
     ctx.roundRect(-7, -34, 14, 68, 7);
     ctx.fill();
 
-    // windshield
     ctx.fillStyle = 'rgba(224,242,254,.92)';
     ctx.beginPath();
     ctx.roundRect(-17, -22, 34, 24, 9);
     ctx.fill();
 
-    // tiny kaiju icon sitting in/on the car
     ctx.fillStyle = '#14b8a6';
     ctx.beginPath();
     ctx.arc(0, -30, 13, 0, Math.PI * 2);
     ctx.fill();
+
     ctx.fillStyle = '#374151';
     [[-8,-43],[0,-47],[8,-43]].forEach(([sx, sy]) => {
       ctx.beginPath();
@@ -267,18 +392,19 @@
       ctx.closePath();
       ctx.fill();
     });
+
     ctx.fillStyle = '#062f2f';
     ctx.beginPath();
     ctx.arc(-4, -32, 1.8, 0, Math.PI * 2);
     ctx.arc(5, -32, 1.8, 0, Math.PI * 2);
     ctx.fill();
+
     ctx.strokeStyle = '#062f2f';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(1, -27, 5, .15, Math.PI - .15);
     ctx.stroke();
 
-    // wheels
     ctx.fillStyle = '#111827';
     ctx.beginPath();
     ctx.roundRect(-36, -24, 12, 24, 6);
@@ -287,7 +413,6 @@
     ctx.roundRect(24, 14, 12, 24, 6);
     ctx.fill();
 
-    // headlights
     ctx.fillStyle = '#fde047';
     ctx.beginPath();
     ctx.arc(-13, -38, 4, 0, Math.PI * 2);
@@ -298,79 +423,79 @@
   }
 
   function cone(x, y, r, spin) {
-    ctx.save(); ctx.translate(x, y); ctx.rotate(spin);
-    ctx.fillStyle = '#fb923c'; ctx.beginPath(); ctx.moveTo(0, -r); ctx.lineTo(r*.9, r); ctx.lineTo(-r*.9, r); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#fff7ed'; ctx.fillRect(-r*.45, r*.08, r*.9, r*.22);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(spin);
+    ctx.fillStyle = '#fb923c';
+    ctx.beginPath();
+    ctx.moveTo(0, -r);
+    ctx.lineTo(r*.9, r);
+    ctx.lineTo(-r*.9, r);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#fff7ed';
+    ctx.fillRect(-r*.45, r*.08, r*.9, r*.22);
     ctx.restore();
   }
 
   function star(x, y, r, spin) {
-    ctx.save(); ctx.translate(x, y); ctx.rotate(spin);
-    ctx.fillStyle = '#fde047'; ctx.beginPath();
-    for (let i=0;i<10;i++) { const a = -Math.PI/2 + i*Math.PI/5; const rr = i%2 ? r*.48 : r; ctx.lineTo(Math.cos(a)*rr, Math.sin(a)*rr); }
-    ctx.closePath(); ctx.fill(); ctx.restore();
-  }
-
-  function roundRect(x, y, w, h, r) {
-    ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(spin);
+    ctx.fillStyle = '#fde047';
+    ctx.beginPath();
+    for (let i=0;i<10;i++) {
+      const a = -Math.PI/2 + i*Math.PI/5;
+      const rr = i%2 ? r*.48 : r;
+      ctx.lineTo(Math.cos(a)*rr, Math.sin(a)*rr);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
   }
 
   function drawBackground() {
-    const g = ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#bae6fd'); g.addColorStop(1,'#86efac'); ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    const g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#bae6fd');
+    g.addColorStop(1,'#86efac');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
     for (let i=0;i<14;i++) {
       const y = (i*90 + (state.roadOffset*.35 % 90));
       ctx.fillStyle = i%2 ? 'rgba(255,255,255,.22)' : 'rgba(255,255,255,.12)';
-      ctx.beginPath(); ctx.arc((i*137)%W, y, 38 + (i%4)*8, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.arc((i*137)%W, y, 38 + (i%4)*8, 0, Math.PI*2);
+      ctx.fill();
     }
   }
 
   function drawRoad() {
     const b = roadBounds(H);
-    ctx.fillStyle = 'rgba(15,23,42,.24)'; roundRect(b.left-14, -50, b.width+28, H+100, 38); ctx.fill();
-    ctx.fillStyle = '#334155'; roundRect(b.left, -50, b.width, H+100, 32); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 5; ctx.setLineDash([28, 28]); ctx.lineDashOffset = -state.roadOffset;
-    ctx.beginPath(); ctx.moveTo(W/2, -50); ctx.lineTo(W/2, H+50); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = '#f8fafc'; roundRect(b.left+14, -50, 8, H+100, 4); roundRect(b.right-22, -50, 8, H+100, 4); ctx.fill();
-  }
-
-  function update() {
-    if (running && !over) {
-      t += 1;
-      state.speed = Math.min(20, state.speed + 0.004);
-      state.roadOffset += state.speed;
-      score += 0.15 * state.speed;
-      const steer = (keys.has('ArrowLeft') || keys.has('a') ? -1 : 0) + (keys.has('ArrowRight') || keys.has('d') ? 1 : 0);
-      state.vx += steer * 0.9;
-      state.vx *= 0.86;
-      state.x += state.vx;
-      const b = roadBounds(H);
-      state.x = Math.max(b.left+40, Math.min(b.right-40, state.x));
-      spawn();
-      for (const o of state.obstacles) { o.y += state.speed; o.spin += .04; }
-      for (const s of state.stars) { s.y += state.speed * .95; s.spin += .08; }
-      state.obstacles = state.obstacles.filter(o => o.y < H+70);
-      state.stars = state.stars.filter(s => s.y < H+70);
-      const carY = H - 105;
-      for (const o of state.obstacles) {
-        const dx = o.x - state.x, dy = o.y - carY;
-        if (Math.hypot(dx, dy) < o.r + 22) takeDamage('Ouch! 2 lives left? Keep dodging!');
-      }
-      for (let i=state.stars.length-1;i>=0;i--) {
-        const s = state.stars[i];
-        if (Math.hypot(s.x-state.x, s.y-carY) < s.r + 24) {
-          score += 150; burst(s.x, s.y); state.stars.splice(i,1);
-        }
-      }
-      checkPeerCollisions(carY);
-      sendPeer();
-    }
-    for (const c of state.confetti) { c.x += c.vx; c.y += c.vy; c.vy += .06; c.life--; }
-    state.confetti = state.confetti.filter(c => c.life > 0);
-    updateHud();
+    ctx.fillStyle = 'rgba(15,23,42,.24)';
+    roundRect(b.left-14, -50, b.width+28, H+100, 38);
+    ctx.fill();
+    ctx.fillStyle = '#334155';
+    roundRect(b.left, -50, b.width, H+100, 32);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.75)';
+    ctx.lineWidth = 5;
+    ctx.setLineDash([28, 28]);
+    ctx.lineDashOffset = -state.roadOffset;
+    ctx.beginPath();
+    ctx.moveTo(W/2, -50);
+    ctx.lineTo(W/2, H+50);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#f8fafc';
+    roundRect(b.left+14, -50, 8, H+100, 4);
+    roundRect(b.right-22, -50, 8, H+100, 4);
+    ctx.fill();
   }
 
   function burst(x,y) {
-    for(let i=0;i<18;i++) state.confetti.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.8)*7,life:35+Math.random()*25});
+    for(let i=0;i<18;i++) {
+      state.confetti.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.8)*7,life:35+Math.random()*25});
+    }
   }
 
   function takeDamage(message = 'Hit! Watch out!') {
@@ -380,25 +505,36 @@
     invincibleUntil = now + 1300;
     shake = 22;
     burst(state.x, H - 105);
-    toast.textContent = lives > 0 ? message.replace('2', String(lives)) : 'No lives left! Press Start Race to retry';
+    writeMe({ lives });
+    toast.textContent = lives > 0 ? message : 'No lives left! Press Reset to retry';
     toast.style.display = 'block';
     setTimeout(() => { if (running && lives > 0) toast.style.display = 'none'; }, 900);
     if (lives <= 0) endGame();
   }
 
+  function endGame() {
+    over = true;
+    running = false;
+    burst(state.x, H-105);
+    best = Math.max(best, Math.floor(score));
+    localStorage.setItem('kaijuSprintBestFirebase', best);
+    writeMe({ running: false, score, lives });
+    toast.textContent = 'Game over! Press Reset, then host can start again.';
+    toast.style.display = 'block';
+  }
+
   function checkPeerCollisions(carY) {
-    if (!dataChannel || dataChannel.readyState !== 'open') return;
-    const now = Date.now();
-    if (now - lastPeerHitAt < 1000) return;
-    const livePeers = [...peers.values()].filter(p => now - p.seen < 2500);
+    if (!roomId || Date.now() - lastPeerHitAt < 900) return;
+    const livePeers = [...peers.values()].filter(p => Date.now() - p.seen < 3500 && p.lives > 0);
     for (const p of livePeers) {
-      const peerY = H - 185;
-      if (Math.hypot(p.x * W - state.x, peerY - carY) < 56) {
-        lastPeerHitAt = now;
-        shake = 18;
-        burst(p.x * W, peerY);
-        dataChannel.send(JSON.stringify({ type: 'hit', target: p.id, from: myId }));
-        toast.textContent = 'Bonk! You hit another kaiju.';
+      const peerX = p.x * W;
+      const peerY = p.y ? p.y * H : H - 185;
+      if (Math.hypot(peerX - state.x, peerY - carY) < 48) {
+        lastPeerHitAt = Date.now();
+        shake = 13;
+        burst(peerX, peerY);
+        damageRemotePlayer(p.id);
+        toast.textContent = `Bonk! You bumped ${p.name || 'a racer'}.`;
         toast.style.display = 'block';
         setTimeout(() => { if (running) toast.style.display = 'none'; }, 700);
         break;
@@ -406,10 +542,63 @@
     }
   }
 
-  function endGame() {
-    over = true; running = false; burst(state.x, H-105);
-    best = Math.max(best, Math.floor(score)); localStorage.setItem('standupSprintBest', best);
-    toast.textContent = 'Crash! Press Start Race to retry'; toast.style.display = 'block';
+  async function damageRemotePlayer(targetId) {
+    if (!db || !roomId || targetId === myId) return;
+    const livesRef = ref(db, `rooms/${roomId}/players/${targetId}/lives`);
+    runTransaction(livesRef, current => {
+      if (typeof current !== 'number' || current <= 0) return current;
+      return current - 1;
+    });
+  }
+
+  function updateGame() {
+    if (running && !over) {
+      t += 1;
+      state.speed = Math.min(20, state.speed + 0.004);
+      state.roadOffset += state.speed;
+      score += 0.15 * state.speed;
+
+      const steer = (keys.has('ArrowLeft') || keys.has('a') ? -1 : 0) + (keys.has('ArrowRight') || keys.has('d') ? 1 : 0);
+      state.vx += steer * 0.9;
+      state.vx *= 0.86;
+      state.x += state.vx;
+
+      const b = roadBounds(H);
+      state.x = Math.max(b.left+40, Math.min(b.right-40, state.x));
+
+      spawn();
+
+      for (const o of state.obstacles) { o.y += state.speed; o.spin += .04; }
+      for (const s of state.stars) { s.y += state.speed * .95; s.spin += .08; }
+      state.obstacles = state.obstacles.filter(o => o.y < H+70);
+      state.stars = state.stars.filter(s => s.y < H+70);
+
+      const carY = H - 105;
+      for (const o of state.obstacles) {
+        if (Math.hypot(o.x - state.x, o.y - carY) < o.r + 22) takeDamage('Ouch! You hit a cone.');
+      }
+
+      for (let i=state.stars.length-1;i>=0;i--) {
+        const s = state.stars[i];
+        if (Math.hypot(s.x-state.x, s.y-carY) < s.r + 24) {
+          score += 150;
+          burst(s.x, s.y);
+          state.stars.splice(i,1);
+        }
+      }
+
+      checkPeerCollisions(carY);
+      writeMeThrottled();
+    }
+
+    for (const c of state.confetti) {
+      c.x += c.vx;
+      c.y += c.vy;
+      c.vy += .06;
+      c.life--;
+    }
+    state.confetti = state.confetti.filter(c => c.life > 0);
+    updateHud();
   }
 
   function draw() {
@@ -419,160 +608,199 @@
       shake *= .82;
       if (shake < .6) shake = 0;
     }
-    drawBackground(); drawRoad();
+
+    drawBackground();
+    drawRoad();
+
     for (const s of state.stars) star(s.x, s.y, s.r, s.spin);
     for (const o of state.obstacles) cone(o.x, o.y, o.r, o.spin);
-    const livePeers = [...peers.values()].filter(p => Date.now() - p.seen < 2500).slice(0, 9);
-    livePeers.forEach((p, i) => carPath(p.x * W, H - 185 - (i % 3) * 34, p.color || carColors[(i + 1) % carColors.length], .7, p.name || ('P' + (i + 2))));
+
+    const livePeers = [...peers.values()].filter(p => Date.now() - p.seen < 3500).slice(0, 9);
+    livePeers.forEach((p, i) => {
+      const y = p.y ? p.y * H : H - 185 - (i % 3) * 34;
+      ctx.globalAlpha = p.lives <= 0 ? .35 : 1;
+      carPath(p.x * W, y, p.color || carColors[(i + 1) % carColors.length], .68, `${p.name || 'Peer'} ${p.lives ?? 3}❤`);
+      ctx.globalAlpha = 1;
+    });
+
     ctx.globalAlpha = Date.now() < invincibleUntil ? .58 + Math.sin(Date.now() / 60) * .25 : 1;
-    carPath(state.x, H - 105, carColors[0], .86, 'YOU');
+    carPath(state.x, H - 105, carColors[0], .86, `${playerName()} ${lives}❤`);
     ctx.globalAlpha = 1;
-    for (const c of state.confetti) { ctx.fillStyle = ['#fde047','#fb7185','#60a5fa','#34d399'][c.life%4]; ctx.fillRect(c.x, c.y, 7, 7); }
+
+    for (const c of state.confetti) {
+      ctx.fillStyle = ['#fde047','#fb7185','#60a5fa','#34d399'][Math.floor(c.life)%4];
+      ctx.fillRect(c.x, c.y, 7, 7);
+    }
+
     ctx.restore();
     requestAnimationFrame(loop);
   }
 
-  function loop() { update(); draw(); }
+  function loop() {
+    updateGame();
+    draw();
+  }
   requestAnimationFrame(loop);
 
-  document.addEventListener('keydown', e => {
-    const tag = document.activeElement?.tagName;
-    const typing = tag === 'INPUT' || tag === 'TEXTAREA';
-    if (typing) return;
+  function writeMe(extra = {}) {
+    if (!db || !roomId || !myPlayerRef) return;
+    const payload = {
+      id: myId,
+      name: playerName(),
+      x: state.x / W,
+      y: (H - 105) / H,
+      score: Math.floor(score),
+      lives,
+      color: carColors[0],
+      seen: Date.now(),
+      ...extra
+    };
+    update(myPlayerRef, payload);
+  }
 
-    keys.add(e.key);
-    if (['ArrowLeft','ArrowRight','a','d'].includes(e.key)) e.preventDefault();
-  });
-  document.addEventListener('keyup', e => keys.delete(e.key));
-  document.getElementById('startBtn').onclick = () => {
-    if (!isHost && connections.size > 0) {
-      toast.textContent = 'Only the host can start the race';
-      toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 1200);
+  function writeMeThrottled() {
+    const now = Date.now();
+    if (now - lastWriteAt < 66) return;
+    lastWriteAt = now;
+    writeMe();
+  }
+
+  async function enterRoom(code, host = false) {
+    if (!configReady) {
+      netStatus.textContent = 'Network: paste Firebase config in index.html first.';
       return;
     }
 
-    roomLocked = true;
-    startGame();
+    await leaveRoom(false);
+    roomId = code.trim().toUpperCase();
+    isHost = host;
+    roomRef = ref(db, `rooms/${roomId}`);
+    myPlayerRef = ref(db, `rooms/${roomId}/players/${myId}`);
 
-    const startMsg = {
-      type: 'start-game'
-    };
+    const roomSnap = await get(roomRef);
 
-    broadcast(startMsg);
-    netStatus.textContent = 'Network: race in progress. Room locked.';
-  };
-  document.getElementById('resetBtn').onclick = resetGame;
-  function hold(btn, key) { btn.onpointerdown = () => keys.add(key); btn.onpointerup = btn.onpointercancel = btn.onpointerleave = () => keys.delete(key); }
-  hold(document.getElementById('leftBtn'), 'ArrowLeft'); hold(document.getElementById('rightBtn'), 'ArrowRight');
-  document.getElementById('boostBtn').onclick = () => { score += 10; burst(state.x, H-120); };
-
-  function attachChannel(ch) {
-    dataChannel = ch;
-    connections.set(ch.peer || ('peer-' + connections.size), ch);
-
-    ch.on('open', () => {
-      netStatus.textContent = 'Network: connected. Cars can bump each other!';
-      peerEl.textContent = `${Math.min(10, connections.size + 1)} players`;
-    });
-
-    ch.on('close', () => {
-      connections.delete(ch.peer);
-      peers.delete(ch.peer);
-      peerEl.textContent = connections.size ? `${Math.min(10, connections.size + 1)} players` : 'Solo';
-    });
-
-    ch.on('data', msg => {
-      try {
-        if (typeof msg === 'string') msg = JSON.parse(msg);
-        if (msg.type === 'start-game') {
-          roomLocked = true;
-          startGame();
-          toast.textContent = 'Race started!';
-          toast.style.display = 'block';
-          setTimeout(() => toast.style.display = 'none', 1000);
-          return;
+    if (host) {
+      await set(roomRef, {
+        meta: {
+          hostId: myId,
+          locked: false,
+          started: false,
+          createdAt: Date.now()
         }
+      });
+    } else {
+      if (!roomSnap.exists()) {
+        netStatus.textContent = 'Network: room not found. Check the code.';
+        roomId = "";
+        return;
+      }
+      const meta = roomSnap.val().meta || {};
+      if (meta.locked || meta.started) {
+        netStatus.textContent = 'Network: race already started, room is locked.';
+        roomId = "";
+        return;
+      }
+      const players = roomSnap.val().players || {};
+      if (Object.keys(players).length >= 10) {
+        netStatus.textContent = 'Network: room is full.';
+        roomId = "";
+        return;
+      }
+    }
 
-        if (!msg.id || msg.id === myId) return;
-
-        if (msg.type === 'hit' && msg.target === myId) {
-          takeDamage('Another racer bumped you!');
-          return;
-        }
-
-        peers.set(msg.id, {
-          id: msg.id,
-          name: msg.name || 'Peer',
-          x: msg.x,
-          score: msg.score,
-          color: msg.color,
-          seen: Date.now()
-        });
-
-        // Host rebroadcasts each player's state to everyone else.
-        if (isHost) broadcast(msg, ch.peer);
-      } catch {}
+    await set(myPlayerRef, {
+      id: myId,
+      name: playerName(),
+      x: state.x / W,
+      y: (H - 105) / H,
+      score: 0,
+      lives: 3,
+      color: carColors[Object.keys(roomSnap.val()?.players || {}).length % carColors.length],
+      seen: Date.now(),
+      host
     });
+    onDisconnect(myPlayerRef).remove();
+
+    roomUnsub = onValue(ref(db, `rooms/${roomId}/meta`), snap => {
+      const meta = snap.val() || {};
+      roomLocked = !!meta.locked;
+      if (meta.started && !running && !over) startGame(true);
+      if (meta.started) {
+        netStatus.textContent = `Network: race in progress. Room ${roomId} locked.`;
+      }
+    });
+
+    playersUnsub = onValue(ref(db, `rooms/${roomId}/players`), snap => {
+      const players = snap.val() || {};
+      peers.clear();
+
+      Object.values(players).forEach(p => {
+        if (!p || p.id === myId) return;
+        peers.set(p.id, p);
+      });
+
+      const me = players[myId];
+      if (me && typeof me.lives === 'number' && me.lives < lives) {
+        lives = me.lives;
+        invincibleUntil = Date.now() + 900;
+        shake = 18;
+        burst(state.x, H - 105);
+        toast.textContent = lives > 0 ? 'Another racer bumped you!' : 'No lives left!';
+        toast.style.display = 'block';
+        if (lives <= 0) endGame();
+      } else if (me && typeof me.lives === 'number') {
+        lives = me.lives;
+      }
+
+      peerEl.textContent = String(Math.min(10, Object.keys(players).length));
+    });
+
+    signalBox.value = roomId;
+    netStatus.textContent = host
+      ? `Network: hosting ${roomId}. Share this code.`
+      : `Network: joined ${roomId}. Waiting for host.`;
+    toast.textContent = host ? 'Room created. Share code, then start.' : 'Joined. Waiting for host to start.';
+    toast.style.display = 'block';
+    writeMe();
   }
 
-  function broadcast(msg, exceptPeer = null) {
-    connections.forEach((ch, id) => {
-      if (id !== exceptPeer && ch.open) ch.send(msg);
-    });
+  async function leaveRoom(clearCode = true) {
+    if (playersUnsub) playersUnsub();
+    if (roomUnsub) roomUnsub();
+    playersUnsub = null;
+    roomUnsub = null;
+
+    if (myPlayerRef) {
+      try { await remove(myPlayerRef); } catch {}
+    }
+
+    peers.clear();
+    roomRef = null;
+    myPlayerRef = null;
+    roomId = "";
+    isHost = false;
+    roomLocked = false;
+    if (clearCode) signalBox.value = "";
+    netStatus.textContent = configReady ? 'Network: left room.' : 'Network: add Firebase config, then host or join.';
+    peerEl.textContent = 'Solo';
   }
 
   document.getElementById('hostBtn').onclick = () => {
-    if (peer) peer.destroy();
-    isHost = true;
-    const roomId = 'kaiju-' + Math.random().toString(36).slice(2, 7).toUpperCase();
-    peer = new Peer(roomId);
-
-    peer.on('open', id => {
-      signalBox.value = id;
-      netStatus.textContent = 'Network: room ready. Share this room code.';
-    });
-
-    peer.on('connection', ch => {
-      if (roomLocked) {
-        ch.close();
-        return;
-      }
-
-      if (connections.size >= 9) {
-        ch.close();
-        return;
-      }
-      attachChannel(ch);
-    });
-
-    peer.on('error', err => {
-      netStatus.textContent = 'Network error: ' + err.type;
-    });
+    const code = roomCode();
+    signalBox.value = code;
+    enterRoom(code, true);
   };
 
   document.getElementById('joinBtn').onclick = () => {
-    const roomId = signalBox.value.trim();
-    if (!roomId) {
-      netStatus.textContent = 'Network: paste a host room code first.';
+    const code = signalBox.value.trim();
+    if (!code) {
+      netStatus.textContent = 'Network: paste the host room code first.';
       return;
     }
-    if (peer) peer.destroy();
-    isHost = false;
-    peer = new Peer();
-
-    peer.on('open', () => {
-      const ch = peer.connect(roomId, { reliable: true });
-      attachChannel(ch);
-      netStatus.textContent = 'Network: joining room...';
-    });
-
-    peer.on('error', err => {
-      netStatus.textContent = 'Network error: ' + err.type;
-    });
+    enterRoom(code, false);
   };
 
-  document.getElementById('answerBtn').onclick = async () => {
+  document.getElementById('copyBtn').onclick = async () => {
     try {
       await navigator.clipboard.writeText(signalBox.value.trim());
       netStatus.textContent = 'Network: room code copied.';
@@ -581,30 +809,58 @@
     }
   };
 
-  document.getElementById('acceptBtn').onclick = () => {
-    connections.forEach(ch => ch.close());
-    connections.clear();
-    peers.clear();
-    if (peer) peer.destroy();
-    peer = null;
-    isHost = false;
-    dataChannel = null;
-    netStatus.textContent = 'Network: left room';
-    peerEl.textContent = 'Solo';
+  document.getElementById('leaveBtn').onclick = () => leaveRoom(true);
+
+  document.getElementById('startBtn').onclick = async () => {
+    if (!roomId) {
+      startGame(true);
+      return;
+    }
+    if (!isHost) {
+      toast.textContent = 'Only the host can start the race.';
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 1200);
+      return;
+    }
+    roomLocked = true;
+    await update(ref(db, `rooms/${roomId}/meta`), { locked: true, started: true, startedAt: Date.now() });
+    startGame(true);
   };
 
-  function sendPeer() {
-    const msg = {
-      id: myId,
-      name: playerNameInput.value.trim() || ('Player ' + myId.toUpperCase()),
-      x: state.x / W,
-      score: Math.floor(score),
-      color: carColors[0]
-    };
-    if (isHost) broadcast(msg);
-    else connections.forEach(ch => { if (ch.open) ch.send(msg); });
+  document.getElementById('resetBtn').onclick = async () => {
+    resetGame();
+    if (roomId && isHost) {
+      await update(ref(db, `rooms/${roomId}/meta`), { locked: false, started: false });
+      const snap = await get(ref(db, `rooms/${roomId}/players`));
+      const players = snap.val() || {};
+      Object.keys(players).forEach(pid => {
+        update(ref(db, `rooms/${roomId}/players/${pid}`), { lives: 3, score: 0, running: false });
+      });
+      netStatus.textContent = `Network: room ${roomId} reset. Players can join again.`;
+    }
+  };
+
+  function hold(btn, key) {
+    btn.onpointerdown = () => keys.add(key);
+    btn.onpointerup = btn.onpointercancel = btn.onpointerleave = () => keys.delete(key);
   }
-})();
+  hold(document.getElementById('leftBtn'), 'ArrowLeft');
+  hold(document.getElementById('rightBtn'), 'ArrowRight');
+  document.getElementById('boostBtn').onclick = () => { score += 10; burst(state.x, H-120); };
+
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement?.tagName;
+    const typing = tag === 'INPUT' || tag === 'TEXTAREA';
+    if (typing) return;
+    keys.add(e.key);
+    if (['ArrowLeft','ArrowRight','a','d'].includes(e.key)) e.preventDefault();
+  });
+  document.addEventListener('keyup', e => keys.delete(e.key));
+
+  if (!configReady) {
+    toast.textContent = 'Paste Firebase config into index.html first';
+    netStatus.textContent = 'Network: waiting for Firebase config.';
+  }
 </script>
 </body>
 </html>
